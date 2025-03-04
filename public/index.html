@@ -486,10 +486,31 @@
       }
       
       try {
-        // Find the highlighted text within the full text using regular expressions
-        const escapedNodeText = nodeText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const regex = new RegExp(`(${escapedNodeText})`, 'i');
-        const parts = displayText.split(regex);
+        // Special handling for leaf nodes (words) and internal nodes (phrases)
+        let parts = [];
+        let matchFound = false;
+        
+        // Exact word matching for leaf nodes (like specific words)
+        if (highlightedNode.type === 'N' || 
+            highlightedNode.type === 'V' || 
+            highlightedNode.type === 'DET' || 
+            highlightedNode.type === 'ADJ' || 
+            highlightedNode.type === 'P' || 
+            highlightedNode.type === 'ADV' ||
+            highlightedNode.children.length === 0) {
+          
+          // Use word boundary in regex to match whole words only
+          const wordRegex = new RegExp(`\\b(${nodeText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})\\b`, 'i');
+          parts = displayText.split(wordRegex);
+          matchFound = parts.length > 1;
+        }
+        
+        // If not a leaf node or no exact match found, try phrase matching
+        if (!matchFound) {
+          const escapedNodeText = nodeText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const regex = new RegExp(`(${escapedNodeText})`, 'i');
+          parts = displayText.split(regex);
+        }
         
         return (
           <div className="text-paragraph">
