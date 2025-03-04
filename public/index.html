@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Syntree Visualizer</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.2/babel.min.js"></script>
+  <style>
+    .tree-node {
+      display: flex;
+      flex-direction: column;
+      margin: 0.5rem 0;
+    }
+    .tree-node-content {
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 0.25rem;
+      font-family: monospace;
+    }
+    .tree-node-children {
+      margin-left: 2rem;
+      padding-left: 0.5rem;
+      border-left: 1px dashed #ccc;
+    }
+    .tag-ROOT { background-color: #f0f4ff; border: 1px solid #cbd5e1; }
+    .tag-S { background-color: #f0fdf4; border: 1px solid #bbf7d0; }
+    .tag-NP { background-color: #eff6ff; border: 1px solid #bfdbfe; }
+    .tag-VP { background-color: #fef3f2; border: 1px solid #fecaca; }
+    .tag-PP { background-color: #f8fafc; border: 1px solid #e2e8f0; }
+    .tag-V { background-color: #fff7ed; border: 1px solid #fed7aa; }
+    .tag-N { background-color: #f0f9ff; border: 1px solid #bae6fd; }
+    .tag-DET { background-color: #faf5ff; border: 1px solid #e9d5ff; }
+    .tag-ADJ { background-color: #f0fdfa; border: 1px solid #99f6e4; }
+    .tag-ADV { background-color: #fdf2f8; border: 1px solid #fbcfe8; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // Sample S-expression (simplified for demonstration)
+    const sampleSexp = `(ROOT
+  (S
+    (NP
+      (DET "Le")
+      (ADJ "petit")
+      (N "chat"))
+    (VP
+      (V "dort")
+      (PP
+        (P "sur")
+        (NP
+          (DET "le")
+          (ADJ "vieux")
+          (N "canapé"))))))`;
+
+    // Function to parse S-expression into a tree structure
+    const parseSexp = (sexp) => {
+      const tokenize = (str) => {
+        // Simple tokenization for S-expressions
+        return str
+          .replace(/\(/g, ' ( ')
+          .replace(/\)/g, ' ) ')
+          .trim()
+          .split(/\s+/)
+          .filter(token => token !== '');
+      };
+      
+      const buildTree = (tokens) => {
+        if (tokens.length === 0) return null;
+        
+        const token = tokens.shift();
+        
+        if (token === '(') {
+          const type = tokens.shift();
+          const children = [];
+          
+          while (tokens[0] !== ')') {
+            if (tokens[0] === '"') {
+              // Handle text content
+              let text = '';
+              tokens.shift(); // remove opening quote
+              
+              while (tokens[0] !== '"' && tokens.length > 0) {
+                text += tokens.shift() + ' ';
+              }
+              
+              if (tokens.length > 0) {
+                tokens.shift(); // remove closing quote
+                text = text.trim();
+                children.push({ type: 'TEXT', content: text, children: [] });
+              }
+            } else {
+              // Handle nested structures
+              const child = buildTree(tokens);
+              if (child) children.push(child);
+            }
+          }
+          
+          tokens.shift(); // remove closing paren
+          return { type, children };
+        } else if (token === '"') {
+          // Start of a text node
+          let text = '';
+          while (tokens[0] !== '"' && tokens.length > 0) {
+            text += tokens.shift() + ' ';
+          }
+          tokens.shift(); // remove closing quote
+          return { type: 'TEXT', content: text.trim(), children: [] };
+        }
+        
+        return null;
+      };
+      
+      const tokens = tokenize(sexp);
+      return buildTree(tokens);
+    };
+
+    // Component to render a node in the syntax tree
+    const TreeNode = ({ node }) => {
+      const [expanded, setExpanded] = useState(true);
+      
+      if (!node) return null;
+      
+      return (
+        <div className="tree-node">
+          <div 
+            className={`tree-node-content tag-${node.type} cursor-pointer`}
+            onClick={() => setExpanded(!expanded)}
+          >
+            <span className="font-medium">{node.type}</span>
+            {node.content && <span className="ml-2 text-gray-700">"{node.content}"</span>}
+            {node.children.length > 0 && (
+              <span className="ml-2 text-gray-400 text-xs">
+                {expanded ? '▼' : '►'}
+              </span>
+            )}
+          </div>
+          
+          {expanded && node.children.length > 0 && (
+            <div className="tree-node-children">
+              {node.children.map((child, index) => (
+                <TreeNode key={index} node={child} />
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    // Main component
+    const App = () => {
+      const [inputSexp, setInputSexp] = useState(sampleSexp);
+      const [parsedTree, setParsedTree] = useState(null);
+      const [error, setError] = useState(null);
+      
+      const handleParse = () => {
+        try {
+          const tree = parseSexp(inputSexp);
+          setParsedTree(tree);
+          setError(null);
+        } catch (err) {
+          setError(`Error parsing S-expression: ${err.message}`);
+          setParsedTree(null);
+        }
+      };
+      
+      useEffect(() => {
+        // Parse the sample data on initial load
+        handleParse();
+      }, []);
+      
+      return (
+        <div className="container mx-auto px-4 py-8">
+          <header className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-800">Syntree Visualizer</h1>
+            <p className="text-gray-600 mt-2">
+              Visualize syntactic trees from S-expression format
+            </p>
+          </header>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <div className="bg-white p-4 rounded-lg shadow-md">
+                <h2 className="text-xl font-semibold mb-4">S-expression Input</h2>
+                <textarea
+                  className="w-full h-64 p-2 border border-gray-300 rounded-md font-mono text-sm"
+                  value={inputSexp}
+                  onChange={(e) => setInputSexp(e.target.value)}
+                />
+                <button
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  onClick={handleParse}
+                >
+                  Parse
+                </button>
+                {error && (
+                  <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-md">
+                    {error}
+                  </div>
+                )}
+              </div>
+              
+              <div className="mt-6 bg-white p-4 rounded-lg shadow-md">
+                <h2 className="text-xl font-semibold mb-4">Legend</h2>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="tree-node-content tag-ROOT">ROOT - Root node</div>
+                  <div className="tree-node-content tag-S">S - Sentence</div>
+                  <div className="tree-node-content tag-NP">NP - Noun phrase</div>
+                  <div className="tree-node-content tag-VP">VP - Verb phrase</div>
+                  <div className="tree-node-content tag-PP">PP - Prepositional phrase</div>
+                  <div className="tree-node-content tag-V">V - Verb</div>
+                  <div className="tree-node-content tag-N">N - Noun</div>
+                  <div className="tree-node-content tag-DET">DET - Determiner</div>
+                  <div className="tree-node-content tag-ADJ">ADJ - Adjective</div>
+                  <div className="tree-node-content tag-ADV">ADV - Adverb</div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-4 rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold mb-4">Syntax Tree</h2>
+              <div className="overflow-auto" style={{ maxHeight: "70vh" }}>
+                {parsedTree ? (
+                  <TreeNode node={parsedTree} />
+                ) : (
+                  <p className="text-gray-500">No valid tree to display</p>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          <footer className="mt-12 text-center text-gray-500 text-sm">
+            <p>
+              Created by <a href="https://github.com/jwalsh" className="text-blue-600 hover:underline">@jwalsh</a>
+            </p>
+            <p className="mt-1">
+              Part of the <strong>syntree-generator</strong> project &middot; {new Date().getFullYear()}
+            </p>
+          </footer>
+        </div>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
