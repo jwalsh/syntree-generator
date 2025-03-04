@@ -6,7 +6,7 @@
 
 A tool for converting French literary text into S-expression syntax trees for linguistic analysis, with visualization capabilities.
 
-[[./static/screenshots/syntax-tree-ui.png]]
+[[./stati./static/screenshots/syntax-tree-ui.png]]
 
 ** Overview
 

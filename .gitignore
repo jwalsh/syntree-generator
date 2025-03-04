@@ -52,3 +52,6 @@ data/texts_catalog.csv
 
 # Exclude dynamic screenshots but include static ones
 screenshots/
+# Include static screenshots
+!static/
+!static/**
