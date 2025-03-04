@@ -49,4 +49,11 @@ data/*.txt
 data/pg*.txt
 data/texts_catalog.csv
 .server.pid
+
+
 screenshots/*.png
+!static/screenshots/*.png
+
+# Exclude dynamic screenshots but include static ones
+screenshots/*.png
+*.png
