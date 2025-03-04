@@ -9,40 +9,291 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.2/babel.min.js"></script>
   <style>
+    :root {
+      --primary-bg: #f9fafb;
+      --secondary-bg: #ffffff;
+      --primary-text: #111827;
+      --secondary-text: #4b5563;
+      --highlight-bg: #fef9c3;
+      --highlight-border: #fbbf24;
+      --accent-color: #3b82f6;
+      --nav-button-bg: #4b5563;
+      --nav-button-hover: #6b7280;
+      --nav-button-disabled: #d1d5db;
+      --tree-border: #e5e7eb;
+      
+      /* Syntax node type colors */
+      --color-root: #f0f4ff;
+      --color-s: #f0fdf4;
+      --color-np: #eff6ff;
+      --color-vp: #fef3f2;
+      --color-pp: #f8fafc;
+      --color-v: #fff7ed;
+      --color-n: #f0f9ff;
+      --color-det: #faf5ff;
+      --color-adj: #f0fdfa;
+      --color-adv: #fdf2f8;
+      --color-p: #f0f9ff;
+      --color-text: #f8fafc;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--primary-bg);
+      color: var(--primary-text);
+    }
+    
     .tree-node {
       display: flex;
       flex-direction: column;
-      margin: 0.5rem 0;
+      margin: 0.35rem 0;
     }
+    
     .tree-node-content {
-      padding: 0.25rem 0.5rem;
+      padding: 0.35rem 0.7rem;
       border-radius: 4px;
       display: inline-block;
-      margin-bottom: 0.25rem;
-      font-family: monospace;
+      margin-bottom: 0.15rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      border: 1px solid var(--tree-border);
+      transition: all 0.2s ease-in-out;
     }
+    
     .tree-node-children {
-      margin-left: 2rem;
+      margin-left: 1.5rem;
       padding-left: 0.5rem;
-      border-left: 1px dashed #ccc;
+      border-left: 1px dashed #cbd5e1;
     }
-    .tag-ROOT { background-color: #f0f4ff; border: 1px solid #cbd5e1; }
-    .tag-S { background-color: #f0fdf4; border: 1px solid #bbf7d0; }
-    .tag-NP { background-color: #eff6ff; border: 1px solid #bfdbfe; }
-    .tag-VP { background-color: #fef3f2; border: 1px solid #fecaca; }
-    .tag-PP { background-color: #f8fafc; border: 1px solid #e2e8f0; }
-    .tag-V { background-color: #fff7ed; border: 1px solid #fed7aa; }
-    .tag-N { background-color: #f0f9ff; border: 1px solid #bae6fd; }
-    .tag-DET { background-color: #faf5ff; border: 1px solid #e9d5ff; }
-    .tag-ADJ { background-color: #f0fdfa; border: 1px solid #99f6e4; }
-    .tag-ADV { background-color: #fdf2f8; border: 1px solid #fbcfe8; }
+    
+    .tag-ROOT { background-color: var(--color-root); }
+    .tag-S { background-color: var(--color-s); }
+    .tag-NP { background-color: var(--color-np); }
+    .tag-VP { background-color: var(--color-vp); }
+    .tag-PP { background-color: var(--color-pp); }
+    .tag-V { background-color: var(--color-v); }
+    .tag-N { background-color: var(--color-n); }
+    .tag-DET { background-color: var(--color-det); }
+    .tag-ADJ { background-color: var(--color-adj); }
+    .tag-ADV { background-color: var(--color-adv); }
+    .tag-P { background-color: var(--color-p); }
+    .tag-TEXT { background-color: var(--color-text); }
+    
+    .text-paragraph {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      padding: 1rem;
+      border-radius: 6px;
+      background-color: var(--secondary-bg);
+      border: 1px solid var(--tree-border);
+      margin-bottom: 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    .text-highlight-ROOT { background-color: var(--color-root); }
+    .text-highlight-S { background-color: var(--color-s); }
+    .text-highlight-NP { background-color: var(--color-np); }
+    .text-highlight-VP { background-color: var(--color-vp); }
+    .text-highlight-PP { background-color: var(--color-pp); }
+    .text-highlight-V { background-color: var(--color-v); }
+    .text-highlight-N { background-color: var(--color-n); }
+    .text-highlight-DET { background-color: var(--color-det); }
+    .text-highlight-ADJ { background-color: var(--color-adj); }
+    .text-highlight-ADV { background-color: var(--color-adv); }
+    .text-highlight-P { background-color: var(--color-p); }
+    .text-highlight-TEXT { background-color: var(--color-text); }
+    
+    .highlighted {
+      border-radius: 4px;
+      padding: 0.1rem 0.2rem;
+      box-shadow: 0 0 0 1px var(--highlight-border);
+    }
+    
+    .navigation-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0.75rem;
+      background-color: var(--secondary-bg);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--tree-border);
+    }
+    
+    .nav-button {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      background-color: var(--nav-button-bg);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .nav-button:hover {
+      background-color: var(--nav-button-hover);
+    }
+    
+    .nav-button:disabled {
+      background-color: var(--nav-button-disabled);
+      cursor: not-allowed;
+    }
+    
+    .tree-node-active {
+      box-shadow: 0 0 0 2px var(--highlight-border);
+    }
+    
+    .panel {
+      background-color: var(--secondary-bg);
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--tree-border);
+      margin-bottom: 1.5rem;
+    }
+    
+    .panel-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--tree-border);
+      font-weight: 600;
+      font-size: 1.25rem;
+      color: var(--primary-text);
+    }
+    
+    .panel-body {
+      padding: 1rem;
+    }
+    
+    .node-type-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--secondary-text);
+      margin-bottom: 0.25rem;
+    }
+    
+    .node-content {
+      font-size: 1.1rem;
+      font-weight: 400;
+    }
+    
+    /* Layout grid */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 2fr 3fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .node-info-panel {
+      padding: 1rem;
+      background-color: var(--highlight-bg);
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--highlight-border);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .legend-color {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 4px;
+      margin-right: 0.5rem;
+      border: 1px solid var(--tree-border);
+    }
+    
+    @media (max-width: 768px) {
+      .main-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+    
+    .pulse {
+      animation: pulse 1.5s infinite;
+    }
+    
+    /* Controls */
+    .input-group {
+      margin-bottom: 1rem;
+    }
+    
+    .input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--secondary-text);
+    }
+    
+    .input-field {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 6px;
+      border: 1px solid var(--tree-border);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+    }
+    
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+    
+    .btn-primary {
+      background-color: var(--accent-color);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #2563eb;
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .word-tag {
+      font-style: italic;
+      font-weight: normal;
+      opacity: 0.8;
+    }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useRef } = React;
 
     // Sample S-expression (simplified for demonstration)
     const sampleSexp = `(ROOT
@@ -122,20 +373,77 @@
       return buildTree(tokens);
     };
 
+    // Force parse the sample S-expression to ensure we have text ready
+    const defaultTree = parseSexp(sampleSexp);
+    const DEFAULT_TEXT = "Le petit chat dort sur le vieux canapé.";
+
+    // Helper function to extract plain text from the syntax tree
+    const extractPlainText = (node) => {
+      if (!node) return '';
+      
+      if (node.type === 'TEXT') {
+        return node.content;
+      }
+      
+      return node.children
+        .map(child => extractPlainText(child))
+        .join(' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    };
+
+    // Helper function to flatten tree into array for navigation
+    const flattenTree = (node, result = []) => {
+      if (!node) return result;
+      
+      result.push(node);
+      
+      if (node.children && node.children.length > 0) {
+        node.children.forEach(child => flattenTree(child, result));
+      }
+      
+      return result;
+    };
+
+    // Get human-readable node type description
+    const getNodeTypeDescription = (type) => {
+      const nodeTypes = {
+        ROOT: "Root node",
+        S: "Sentence",
+        NP: "Noun phrase",
+        VP: "Verb phrase",
+        PP: "Prepositional phrase",
+        V: "Verb",
+        N: "Noun",
+        DET: "Determiner",
+        ADJ: "Adjective",
+        ADV: "Adverb",
+        P: "Preposition",
+        TEXT: "Text content"
+      };
+      
+      return nodeTypes[type] || type;
+    };
+
     // Component to render a node in the syntax tree
-    const TreeNode = ({ node }) => {
+    const TreeNode = ({ node, activeNodeId, onNodeClick }) => {
       const [expanded, setExpanded] = useState(true);
       
       if (!node) return null;
       
+      const isActive = activeNodeId === node.id;
+      
       return (
         <div className="tree-node">
           <div 
-            className={`tree-node-content tag-${node.type} cursor-pointer`}
-            onClick={() => setExpanded(!expanded)}
+            className={`tree-node-content tag-${node.type} cursor-pointer ${isActive ? 'tree-node-active' : ''}`}
+            onClick={() => {
+              setExpanded(!expanded);
+              onNodeClick(node.id);
+            }}
           >
             <span className="font-medium">{node.type}</span>
-            {node.content && <span className="ml-2 text-gray-700">"{node.content}"</span>}
+            {node.content && <span className="ml-2 text-gray-700 word-tag">"{node.content}"</span>}
             {node.children.length > 0 && (
               <span className="ml-2 text-gray-400 text-xs">
                 {expanded ? '▼' : '►'}
@@ -146,10 +454,133 @@
           {expanded && node.children.length > 0 && (
             <div className="tree-node-children">
               {node.children.map((child, index) => (
-                <TreeNode key={index} node={child} />
+                <TreeNode 
+                  key={index} 
+                  node={child} 
+                  activeNodeId={activeNodeId}
+                  onNodeClick={onNodeClick}
+                />
               ))}
             </div>
           )}
+        </div>
+      );
+    };
+
+    // Component to render the text paragraph with highlighting
+    const TextParagraph = ({ text, highlightedNode }) => {
+      // Always show the default text if no text is provided
+      const displayText = text || DEFAULT_TEXT;
+      
+      // If no node to highlight, just show the text
+      if (!highlightedNode) {
+        return <div className="text-paragraph">{displayText}</div>;
+      }
+      
+      // Extract the text for the current node
+      const nodeText = extractPlainText(highlightedNode);
+      
+      // If the node has no text, just show the full text without highlighting
+      if (!nodeText || nodeText.trim() === '') {
+        return <div className="text-paragraph">{displayText}</div>;
+      }
+      
+      try {
+        // Find the highlighted text within the full text using regular expressions
+        const escapedNodeText = nodeText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(${escapedNodeText})`, 'i');
+        const parts = displayText.split(regex);
+        
+        return (
+          <div className="text-paragraph">
+            {parts.map((part, i) => {
+              // Check if this part matches the node text (case insensitive)
+              if (part.toLowerCase() === nodeText.toLowerCase()) {
+                return (
+                  <span 
+                    key={i} 
+                    className={`highlighted text-highlight-${highlightedNode.type}`}
+                  >
+                    {part}
+                  </span>
+                );
+              }
+              return part;
+            })}
+          </div>
+        );
+      } catch (e) {
+        console.error("Error highlighting text:", e);
+        return <div className="text-paragraph">{displayText}</div>;
+      }
+    };
+
+    // Component to display information about the current node
+    const NodeInfoPanel = ({ node }) => {
+      if (!node) return null;
+      
+      const nodeText = extractPlainText(node);
+      
+      return (
+        <div className={`node-info-panel tag-${node.type}`}>
+          <div className="node-type-label">CURRENT NODE</div>
+          <div className="font-bold text-xl mb-2">{node.type} <span className="text-gray-500 text-base">({getNodeTypeDescription(node.type)})</span></div>
+          
+          {nodeText && (
+            <div className="mt-3">
+              <div className="node-type-label">TEXT CONTENT</div>
+              <div className="node-content">{nodeText}</div>
+            </div>
+          )}
+          
+          <div className="mt-3">
+            <div className="node-type-label">CHILDREN</div>
+            <div className="node-content">
+              {node.children.length > 0 ? (
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {node.children.map((child, index) => (
+                    <span 
+                      key={index} 
+                      className={`inline-block px-2 py-1 rounded-md text-sm tag-${child.type}`}
+                    >
+                      {child.type}
+                      {child.content && <span className="word-tag"> "{child.content}"</span>}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <span className="text-gray-500">No children</span>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    // Component to display the legend
+    const SyntaxLegend = () => {
+      const nodeTypes = [
+        { type: "ROOT", description: "Root node" },
+        { type: "S", description: "Sentence" },
+        { type: "NP", description: "Noun phrase" },
+        { type: "VP", description: "Verb phrase" },
+        { type: "PP", description: "Prepositional phrase" },
+        { type: "V", description: "Verb" },
+        { type: "N", description: "Noun" },
+        { type: "DET", description: "Determiner" },
+        { type: "ADJ", description: "Adjective" },
+        { type: "ADV", description: "Adverb" },
+        { type: "P", description: "Preposition" }
+      ];
+      
+      return (
+        <div className="legend-grid">
+          {nodeTypes.map(item => (
+            <div key={item.type} className="legend-item">
+              <div className={`legend-color tag-${item.type}`}></div>
+              <div>{item.type}: {item.description}</div>
+            </div>
+          ))}
         </div>
       );
     };
@@ -159,15 +590,74 @@
       const [inputSexp, setInputSexp] = useState(sampleSexp);
       const [parsedTree, setParsedTree] = useState(null);
       const [error, setError] = useState(null);
+      const [plainText, setPlainText] = useState(DEFAULT_TEXT);
+      const [flatNodes, setFlatNodes] = useState([]);
+      const [currentNodeIndex, setCurrentNodeIndex] = useState(0);
+      const [activeNodeId, setActiveNodeId] = useState(null);
+      const treeContainerRef = useRef(null);
+      
+      // Assign unique IDs to each node in the tree
+      const assignNodeIds = (node, id = '0') => {
+        if (!node) return null;
+        
+        node.id = id;
+        
+        if (node.children && node.children.length > 0) {
+          node.children.forEach((child, index) => {
+            assignNodeIds(child, `${id}-${index}`);
+          });
+        }
+        
+        return node;
+      };
       
       const handleParse = () => {
         try {
-          const tree = parseSexp(inputSexp);
+          let tree = parseSexp(inputSexp);
+          tree = assignNodeIds(tree);
           setParsedTree(tree);
+          
+          // Extract plain text from the entire tree
+          const text = extractPlainText(tree);
+          setPlainText(text || DEFAULT_TEXT); // Fallback to default text if extraction fails
+          
+          // Create flat list of nodes for navigation
+          const nodes = flattenTree(tree);
+          setFlatNodes(nodes);
+          
+          // Reset navigation to the root node
+          setCurrentNodeIndex(0);
+          setActiveNodeId(nodes[0]?.id || null);
+          
           setError(null);
         } catch (err) {
+          console.error("Parse error:", err);
           setError(`Error parsing S-expression: ${err.message}`);
           setParsedTree(null);
+          setPlainText(DEFAULT_TEXT);
+          setFlatNodes([]);
+        }
+      };
+      
+      const handlePrevNode = () => {
+        if (currentNodeIndex > 0) {
+          setCurrentNodeIndex(currentNodeIndex - 1);
+          setActiveNodeId(flatNodes[currentNodeIndex - 1].id);
+        }
+      };
+      
+      const handleNextNode = () => {
+        if (currentNodeIndex < flatNodes.length - 1) {
+          setCurrentNodeIndex(currentNodeIndex + 1);
+          setActiveNodeId(flatNodes[currentNodeIndex + 1].id);
+        }
+      };
+      
+      const handleNodeClick = (nodeId) => {
+        const index = flatNodes.findIndex(node => node.id === nodeId);
+        if (index !== -1) {
+          setCurrentNodeIndex(index);
+          setActiveNodeId(nodeId);
         }
       };
       
@@ -176,62 +666,120 @@
         handleParse();
       }, []);
       
+      // Get current node for highlighting
+      const currentNode = flatNodes[currentNodeIndex];
+      
       return (
-        <div className="container mx-auto px-4 py-8">
-          <header className="mb-8">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          <header className="mb-6">
             <h1 className="text-3xl font-bold text-gray-800">Syntree Visualizer</h1>
             <p className="text-gray-600 mt-2">
-              Visualize syntactic trees from S-expression format
+              Interactive visualization of syntactic trees from S-expression format
             </p>
           </header>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <div className="bg-white p-4 rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold mb-4">S-expression Input</h2>
-                <textarea
-                  className="w-full h-64 p-2 border border-gray-300 rounded-md font-mono text-sm"
-                  value={inputSexp}
-                  onChange={(e) => setInputSexp(e.target.value)}
-                />
-                <button
-                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                  onClick={handleParse}
-                >
-                  Parse
-                </button>
-                {error && (
-                  <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-md">
-                    {error}
+          {/* Navigation Controls - Now positioned above the text */}
+          <div className="navigation-controls">
+            <button 
+              className="nav-button" 
+              onClick={handlePrevNode}
+              disabled={currentNodeIndex <= 0}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fillRule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+              </svg>
+              Previous
+            </button>
+            <span className="text-gray-700 font-semibold">
+              Node {currentNodeIndex + 1} of {flatNodes.length}
+            </span>
+            <button 
+              className="nav-button" 
+              onClick={handleNextNode}
+              disabled={currentNodeIndex >= flatNodes.length - 1}
+            >
+              Next
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </button>
+          </div>
+          
+          {/* Original Text Panel with Highlighting */}
+          <div className="panel">
+            <div className="panel-header">
+              Original Text
+            </div>
+            <div className="panel-body">
+              <TextParagraph text={plainText} highlightedNode={currentNode} />
+            </div>
+          </div>
+          
+          <div className="main-layout">
+            <div className="left-panel">
+              {/* Current Node Info */}
+              {currentNode && <NodeInfoPanel node={currentNode} />}
+              
+              {/* S-expression Input */}
+              <div className="panel">
+                <div className="panel-header">
+                  S-expression Input
+                </div>
+                <div className="panel-body">
+                  <div className="input-group">
+                    <textarea
+                      className="input-field"
+                      style={{ height: "200px" }}
+                      value={inputSexp}
+                      onChange={(e) => setInputSexp(e.target.value)}
+                    />
                   </div>
-                )}
+                  <button
+                    className="btn btn-primary"
+                    onClick={handleParse}
+                  >
+                    Parse
+                  </button>
+                  {error && (
+                    <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-md">
+                      {error}
+                    </div>
+                  )}
+                </div>
               </div>
               
-              <div className="mt-6 bg-white p-4 rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold mb-4">Legend</h2>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="tree-node-content tag-ROOT">ROOT - Root node</div>
-                  <div className="tree-node-content tag-S">S - Sentence</div>
-                  <div className="tree-node-content tag-NP">NP - Noun phrase</div>
-                  <div className="tree-node-content tag-VP">VP - Verb phrase</div>
-                  <div className="tree-node-content tag-PP">PP - Prepositional phrase</div>
-                  <div className="tree-node-content tag-V">V - Verb</div>
-                  <div className="tree-node-content tag-N">N - Noun</div>
-                  <div className="tree-node-content tag-DET">DET - Determiner</div>
-                  <div className="tree-node-content tag-ADJ">ADJ - Adjective</div>
-                  <div className="tree-node-content tag-ADV">ADV - Adverb</div>
+              {/* Legend Panel - Now positioned underneath input */}
+              <div className="panel">
+                <div className="panel-header">
+                  Syntax Node Legend
+                </div>
+                <div className="panel-body">
+                  <SyntaxLegend />
                 </div>
               </div>
             </div>
             
-            <div className="bg-white p-4 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold mb-4">Syntax Tree</h2>
-              <div className="overflow-auto" style={{ maxHeight: "70vh" }}>
-                {parsedTree ? (
-                  <TreeNode node={parsedTree} />
-                ) : (
-                  <p className="text-gray-500">No valid tree to display</p>
-                )}
+            <div className="right-panel">
+              {/* Syntax Tree */}
+              <div className="panel h-full">
+                <div className="panel-header">
+                  Syntax Tree
+                </div>
+                <div 
+                  className="panel-body overflow-auto" 
+                  style={{ maxHeight: "calc(100vh - 250px)" }}
+                  ref={treeContainerRef}
+                >
+                  {parsedTree ? (
+                    <TreeNode 
+                      node={parsedTree} 
+                      activeNodeId={activeNodeId}
+                      onNodeClick={handleNodeClick}
+                    />
+                  ) : (
+                    <p className="text-gray-500">No valid syntax tree to display</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
