@@ -6,7 +6,7 @@
 
 A tool for converting French literary text into S-expression syntax trees for linguistic analysis, with visualization capabilities.
 
-[[./stati./static/screenshots/syntax-tree-ui.png]]
+[[./static/screenshots/syntax-tree-ui.png]]
 
 ** Overview
 
@@ -68,7 +68,7 @@ To view the syntax trees in the web UI:
 
 #+BEGIN_SRC bash
 make serve
-# Then visit http://localhost:8000 in your browser
+# Then visit http://localhost:8765 in your browser
 #+END_SRC
 
 *** Advanced Emacs Integration
