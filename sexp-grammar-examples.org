@@ -1,0 +1,807 @@
+#+TITLE: S-Expression Grammar Examples
+#+AUTHOR: Jason Walsh
+#+EMAIL: j@wal.sh
+#+DATE: March 4, 2025
+
+* Overview
+  
+This file contains a collection of S-expression examples representing syntactic structures at different complexity levels. These examples can be used to test the syntree-generator visualization tools or other S-expression parsers.
+
+The examples are organized by complexity level:
+- Simple: Basic subject-verb structures with minimal modifiers
+- Medium: Sentences with prepositional phrases and simple modifiers
+- Complex: Sentences with relative clauses or subordinate clauses
+- Very Complex: Multi-clause sentences with deep nesting typical of literary texts
+
+Each example is provided as a Babel block that can be tangled to the =examples/= directory.
+
+* Simple Examples
+  
+** Simple Subject-Verb Structure
+   
+Simple sentence with just a subject (NP) and verb (VP).
+
+#+BEGIN_SRC lisp :tangle examples/simple_1.sexp :mkdirp t
+(ROOT
+  (S
+    (NP
+      (DET "Le")
+      (N "chat"))
+    (VP
+      (V "dort"))))
+#+END_SRC
+
+** Simple Question Form
+   
+Simple question with an inverted structure.
+
+#+BEGIN_SRC lisp :tangle examples/simple_2.sexp
+(ROOT
+  (S
+    (VP
+      (V "Avez")
+      (PRO "vous"))
+    (NP
+      (DET "le")
+      (N "livre"))))
+#+END_SRC
+
+** Simple Imperative
+   
+Simple imperative sentence with just a verb phrase.
+
+#+BEGIN_SRC lisp :tangle examples/simple_3.sexp
+(ROOT
+  (S
+    (VP
+      (V "Venez")
+      (ADV "ici"))))
+#+END_SRC
+
+** Simple Subject-Verb-Object
+   
+Simple sentence with subject, verb, and direct object.
+
+#+BEGIN_SRC lisp :tangle examples/simple_4.sexp
+(ROOT
+  (S
+    (NP
+      (DET "La")
+      (N "fille"))
+    (VP
+      (V "lit")
+      (NP
+        (DET "un")
+        (N "livre")))))
+#+END_SRC
+
+** Simple Adjectival Modification
+   
+Simple sentence with adjectives modifying nouns.
+
+#+BEGIN_SRC lisp :tangle examples/simple_5.sexp
+(ROOT
+  (S
+    (NP
+      (DET "Le")
+      (ADJ "petit")
+      (N "chat"))
+    (VP
+      (V "est")
+      (ADJ "noir"))))
+#+END_SRC
+
+* Medium Examples
+  
+** Prepositional Phrase Modification
+   
+Medium complexity with a prepositional phrase modifying the verb phrase.
+
+#+BEGIN_SRC lisp :tangle examples/medium_1.sexp
+(ROOT
+  (S
+    (NP
+      (DET "Le")
+      (ADJ "petit")
+      (N "chat"))
+    (VP
+      (V "dort")
+      (PP
+        (P "sur")
+        (NP
+          (DET "le")
+          (ADJ "vieux")
+          (N "canapé"))))))
+#+END_SRC
+
+** Conjunction of Noun Phrases
+   
+Medium complexity with a conjunction joining two noun phrases.
+
+#+BEGIN_SRC lisp :tangle examples/medium_2.sexp
+(ROOT
+  (S
+    (NP
+      (NP
+        (DET "Le")
+        (N "chien"))
+      (CONJ "et")
+      (NP
+        (DET "le")
+        (N "chat")))
+    (VP
+      (V "jouent")
+      (PP
+        (P "dans")
+        (NP
+          (DET "le")
+          (N "jardin"))))))
+#+END_SRC
+
+** Adverbial Modification
+   
+Medium complexity with adverbial modification of the verb.
+
+#+BEGIN_SRC lisp :tangle examples/medium_3.sexp
+(ROOT
+  (S
+    (NP
+      (DET "La")
+      (N "voiture"))
+    (VP
+      (ADV "rapidement")
+      (V "traverse")
+      (NP
+        (DET "la")
+        (N "ville")))))
+#+END_SRC
+
+** Noun with Multiple Modifiers
+   
+Medium complexity with multiple adjectives modifying a noun.
+
+#+BEGIN_SRC lisp :tangle examples/medium_4.sexp
+(ROOT
+  (S
+    (NP
+      (DET "La")
+      (ADJ "belle")
+      (ADJ "grande")
+      (ADJ "vieille")
+      (N "maison"))
+    (VP
+      (V "se trouve")
+      (PP
+        (P "sur")
+        (NP
+          (DET "la")
+          (N "colline"))))))
+#+END_SRC
+
+** Past Tense with Object
+   
+Medium complexity with a past tense construction and direct object.
+
+#+BEGIN_SRC lisp :tangle examples/medium_5.sexp
+(ROOT
+  (S
+    (NP
+      (PRO "Il"))
+    (VP
+      (V "a")
+      (PST-PART "mangé")
+      (NP
+        (DET "une")
+        (N "pomme"))
+      (PP
+        (P "pour")
+        (NP
+          (DET "le")
+          (N "déjeuner"))))))
+#+END_SRC
+
+* Complex Examples
+  
+** Relative Clause
+   
+Complex sentence with a relative clause modifying a noun phrase.
+
+#+BEGIN_SRC lisp :tangle examples/complex_1.sexp
+(ROOT
+  (S
+    (NP
+      (DET "L'")
+      (N "homme")
+      (REL
+        (REL-PRO "qui")
+        (VP
+          (V "regardait")
+          (PP
+            (P "par")
+            (NP
+              (DET "la")
+              (N "fenêtre"))))))
+    (VP
+      (V "attendait")
+      (NP
+        (DET "son")
+        (N "ami")))))
+#+END_SRC
+
+** Subordinate Clause
+   
+Complex sentence with a subordinate clause as the object of the main verb.
+
+#+BEGIN_SRC lisp :tangle examples/complex_2.sexp
+(ROOT
+  (S
+    (NP
+      (PRO "Je"))
+    (VP
+      (V "savais")
+      (CP
+        (SUB
+          (SUB "que")
+          (NP
+            (PRO "vous"))
+          (VP
+            (V "viendriez")
+            (PP
+              (P "à")
+              (NP
+                (DET "cette")
+                (N "heure")))))))))
+#+END_SRC
+
+** Negative Infinitive Construction
+   
+Complex sentence with a negative infinitive purpose clause.
+
+#+BEGIN_SRC lisp :tangle examples/complex_3.sexp
+(ROOT
+  (S
+    (NP
+      (PRO "Il"))
+    (VP
+      (V "est")
+      (V "parti")
+      (PP
+        (P "pour")
+        (NEG-INF
+          (NEG "ne pas")
+          (V "être")
+          (PST-PART "vu")
+          (PP
+            (P "par")
+            (NP
+              (DET "les")
+              (N "invités"))))))))
+#+END_SRC
+
+** Conditional Clause
+   
+Complex sentence with a conditional clause.
+
+#+BEGIN_SRC lisp :tangle examples/complex_4.sexp
+(ROOT
+  (S
+    (COND
+      (REL
+        (REL-PRO "Si")
+        (NP
+          (PRO "vous"))
+        (VP
+          (V "arrivez")
+          (PP
+            (P "à")
+            (NP
+              (N "temps"))))))
+    (NP
+      (PRO "nous"))
+    (VP
+      (V "pourrons")
+      (V "dîner")
+      (ADV "ensemble"))))
+#+END_SRC
+
+** Multiple Prepositional Phrases
+   
+Complex sentence with multiple nested prepositional phrases.
+
+#+BEGIN_SRC lisp :tangle examples/complex_5.sexp
+(ROOT
+  (S
+    (NP
+      (DET "Le")
+      (N "livre"))
+    (VP
+      (V "se trouve")
+      (PP
+        (P "sur")
+        (NP
+          (DET "la")
+          (N "table")))
+      (PP
+        (P "dans")
+        (NP
+          (DET "le")
+          (N "salon")))
+      (PP
+        (P "de")
+        (NP
+          (DET "la")
+          (N "maison")))
+      (PP
+        (P "de")
+        (NP
+          (DET "mes")
+          (N "parents"))))))
+#+END_SRC
+
+* Very Complex Examples
+  
+** Literary Example from Proust
+   
+Very complex sentence with multiple clauses and nested phrases typical of Proust's style.
+
+#+BEGIN_SRC lisp :tangle examples/very_complex_1.sexp
+(ROOT
+  (S
+    (CP
+      (SUB
+        (REL
+          (REL-PRO "Comme")
+          (NP
+            (PRO "je"))
+          (VP
+            (V "descendais")
+            (PP
+              (P "par")
+              (NP
+                (DET "l'")
+                (N "escalier"))))))
+      (NP
+        (PRO "j'"))
+      (VP
+        (V "entendis")
+        (NP
+          (N "M.")
+          (PP
+            (P "de")
+            (N "Charlus")))
+        (REL
+          (REL-PRO "qui")
+          (VP
+            (V "parlait")
+            (PP
+              (P "à")
+              (NP
+                (N "Jupien")))
+            (PP
+              (P "dans")
+              (NP
+                (DET "la")
+                (N "cour")))))))))
+#+END_SRC
+
+** Multiple Subordinate Clauses
+   
+Very complex sentence with multiple levels of subordination.
+
+#+BEGIN_SRC lisp :tangle examples/very_complex_2.sexp
+(ROOT
+  (S
+    (NP
+      (PRO "Je"))
+    (VP
+      (V "crois")
+      (CP
+        (SUB
+          (SUB "que")
+          (NP
+            (PRO "vous"))
+          (VP
+            (V "savez")
+            (CP
+              (SUB
+                (SUB "que")
+                (NP
+                  (DET "la")
+                  (N "personne"))
+                (REL
+                  (REL-PRO "dont")
+                  (NP
+                    (PRO "nous"))
+                  (VP
+                    (V "parlions")))
+                (VP
+                  (V "est")
+                  (V "arrivée")
+                  (PP
+                    (P "avant")
+                    (NP
+                      (PRO "nous"))))))))))))
+#+END_SRC
+
+** Conjunction of Complex Clauses
+   
+Very complex sentence with conjoined complex clauses.
+
+#+BEGIN_SRC lisp :tangle examples/very_complex_3.sexp
+(ROOT
+  (S
+    (CP
+      (S
+        (NP
+          (DET "La")
+          (N "lumière"))
+        (VP
+          (V "baissait")
+          (PP
+            (P "sur")
+            (NP
+              (DET "la")
+              (N "ville")))
+          (TEMP
+            (CONJ "tandis que")
+            (NP
+              (DET "le")
+              (N "soleil"))
+            (VP
+              (V "se couchait")
+              (PP
+                (P "derrière")
+                (NP
+                  (DET "les")
+                  (N "montagnes"))))))))
+    (CONJ "et")
+    (S
+      (NP
+        (DET "les")
+        (N "passants"))
+      (VP
+        (V "commençaient")
+        (PP
+          (P "à")
+          (INF
+            (V "rentrer")
+            (PP
+              (P "chez")
+              (PRO "eux"))
+            (PP
+              (P "après")
+              (NP
+                (DET "une")
+                (ADJ "longue")
+                (N "journée"))))))))))
+#+END_SRC
+
+** Nested Relative Clauses
+   
+Very complex sentence with nested relative clauses.
+
+#+BEGIN_SRC lisp :tangle examples/very_complex_4.sexp
+(ROOT
+  (S
+    (NP
+      (DET "La")
+      (N "femme")
+      (REL
+        (REL-PRO "qui")
+        (VP
+          (V "portait")
+          (NP
+            (DET "un")
+            (N "chapeau")
+            (REL
+              (REL-PRO "que")
+              (NP
+                (PRO "j'"))
+              (VP
+                (V "avais")
+                (V "remarqué")
+                (PP
+                  (P "à")
+                  (NP
+                    (DET "l'")
+                    (N "exposition")
+                    (REL
+                      (REL-PRO "dont")
+                      (NP
+                        (PRO "nous"))
+                      (VP
+                        (V "parlions")
+                        (ADV "hier"))))))))))))
+    (VP
+      (V "est")
+      (VP
+        (V "passée")
+        (PP
+          (P "devant")
+          (NP
+            (PRO "nous")))
+        (PP
+          (P "sans")
+          (INF
+            (V "nous")
+            (V "voir")))))))
+#+END_SRC
+
+** Multiple Complex Modifiers with Nested Clauses
+   
+Very complex sentence with a rich array of modifiers and nested clauses.
+
+#+BEGIN_SRC lisp :tangle examples/very_complex_5.sexp
+(ROOT
+  (S
+    (ADV "Finalement")
+    (PP
+      (P "après")
+      (NP
+        (ADJ "longue")
+        (N "réflexion")))
+    (NP
+      (DET "le")
+      (ADJ "vieux")
+      (N "professeur")
+      (REL
+        (REL-PRO "qui")
+        (VP
+          (V "avait")
+          (V "consacré")
+          (NP
+            (DET "sa")
+            (N "vie"))
+          (PP
+            (P "à")
+            (NP
+              (DET "l'")
+              (N "étude")
+              (PP
+                (P "de")
+                (NP
+                  (DET "ces")
+                  (ADJ "anciens")
+                  (N "textes"))))))))
+    (VP
+      (V "décida")
+      (PP
+        (P "de")
+        (INF
+          (V "publier")
+          (NP
+            (DET "ses")
+            (N "découvertes"))
+          (PP
+            (P "malgré")
+            (NP
+              (DET "les")
+              (N "critiques")
+              (REL
+                (REL-PRO "qu'")
+                (NP
+                  (PRO "il"))
+                (VP
+                  (V "savait")
+                  (CP
+                    (SUB
+                      (SUB "qu'")
+                      (NP
+                        (PRO "il"))
+                      (VP
+                        (V "allait")
+                        (INF
+                          (V "recevoir")
+                          (PP
+                            (P "de")
+                            (NP
+                              (DET "ses")
+                              (N "collègues")))))))))))))))
+#+END_SRC
+
+* Combined Examples
+  
+** Diverse Examples for Visualization
+   
+A selection of diverse examples at different complexity levels for quick testing.
+
+#+BEGIN_SRC lisp :tangle examples/diverse_examples.sexp
+# Diverse S-expression examples for syntactic analysis
+
+# Simple Example - Basic subject-verb structure
+(ROOT
+  (S
+    (NP
+      (DET "Le")
+      (N "chat"))
+    (VP
+      (V "dort"))))
+
+# Medium Example - With prepositional phrase
+(ROOT
+  (S
+    (NP
+      (DET "Le")
+      (ADJ "petit")
+      (N "chat"))
+    (VP
+      (V "dort")
+      (PP
+        (P "sur")
+        (NP
+          (DET "le")
+          (ADJ "vieux")
+          (N "canapé"))))))
+
+# Complex Example - With relative clause
+(ROOT
+  (S
+    (NP
+      (DET "L'")
+      (N "homme")
+      (REL
+        (REL-PRO "qui")
+        (VP
+          (V "regardait")
+          (PP
+            (P "par")
+            (NP
+              (DET "la")
+              (N "fenêtre"))))))
+    (VP
+      (V "attendait")
+      (NP
+        (DET "son")
+        (N "ami")))))
+
+# Very Complex Example - Multiple clauses from Proust
+(ROOT
+  (S
+    (CP
+      (SUB
+        (REL
+          (REL-PRO "Comme")
+          (NP
+            (PRO "je"))
+          (VP
+            (V "descendais")
+            (PP
+              (P "par")
+              (NP
+                (DET "l'")
+                (N "escalier"))))))
+      (NP
+        (PRO "j'"))
+      (VP
+        (V "entendis")
+        (NP
+          (N "M.")
+          (PP
+            (P "de")
+            (N "Charlus")))
+        (REL
+          (REL-PRO "qui")
+          (VP
+            (V "parlait")
+            (PP
+              (P "à")
+              (NP
+                (N "Jupien")))
+            (PP
+              (P "dans")
+              (NP
+                (DET "la")
+                (N "cour")))))))))
+#+END_SRC
+
+* Utility Functions
+  
+** Extract Examples from Parsed Output
+
+This function extracts examples from the parsed output. You can define a function to load and extract examples directly from your parsing output if needed.
+
+#+BEGIN_SRC emacs-lisp :tangle examples/extract_examples.el
+(defun syntree-extract-examples (file-path)
+  "Extract S-expression examples from FILE-PATH containing parsed output."
+  (with-temp-buffer
+    (insert-file-contents file-path)
+    (let ((examples '())
+          (current-example '())
+          (in-example nil))
+      (goto-char (point-min))
+      (while (not (eobp))
+        (let ((line (buffer-substring-no-properties
+                     (line-beginning-position)
+                     (line-end-position))))
+          (cond
+           ;; Start of a new example
+           ((string-match "^SENTENCE" line)
+            (when current-example
+              (push (string-join (reverse current-example) "\n") examples)
+              (setq current-example nil))
+            (push line current-example)
+            (setq in-example t))
+           
+           ;; Add line to current example if we're in an example
+           (in-example
+            (if (string-match "^$\\|^CHUNK\\|^===" line)
+                (setq in-example nil)
+              (push line current-example)))))
+        (forward-line 1))
+      
+      ;; Add the last example if there is one
+      (when current-example
+        (push (string-join (reverse current-example) "\n") examples))
+      
+      ;; Return the examples
+      (reverse examples))))
+
+(defun syntree-save-examples (examples output-dir)
+  "Save EXAMPLES to separate files in OUTPUT-DIR."
+  (unless (file-directory-p output-dir)
+    (make-directory output-dir t))
+  
+  (let ((simple-examples '())
+        (medium-examples '())
+        (complex-examples '())
+        (very-complex-examples '()))
+    
+    ;; Categorize examples by complexity
+    (dolist (example examples)
+      (let* ((lines (split-string example "\n"))
+             (depth (length lines))
+             (nesting (with-temp-buffer
+                        (insert example)
+                        (goto-char (point-min))
+                        (how-many "("))))
+        (cond
+         ((< depth 10) (push example simple-examples))
+         ((< depth 20) (push example medium-examples))
+         ((< depth 30) (push example complex-examples))
+         (t (push example very-complex-examples)))))
+    
+    ;; Save examples to files
+    (with-temp-file (expand-file-name "simple_examples.sexp" output-dir)
+      (insert "# Simple S-expression examples\n\n")
+      (dolist (example (reverse (seq-take simple-examples 5)))
+        (insert "# Example\n")
+        (insert example)
+        (insert "\n\n")))
+    
+    (with-temp-file (expand-file-name "medium_examples.sexp" output-dir)
+      (insert "# Medium S-expression examples\n\n")
+      (dolist (example (reverse (seq-take medium-examples 5)))
+        (insert "# Example\n")
+        (insert example)
+        (insert "\n\n")))
+    
+    (with-temp-file (expand-file-name "complex_examples.sexp" output-dir)
+      (insert "# Complex S-expression examples\n\n")
+      (dolist (example (reverse (seq-take complex-examples 5)))
+        (insert "# Example\n")
+        (insert example)
+        (insert "\n\n")))
+    
+    (with-temp-file (expand-file-name "very_complex_examples.sexp" output-dir)
+      (insert "# Very complex S-expression examples\n\n")
+      (dolist (example (reverse (seq-take very-complex-examples 5)))
+        (insert "# Example\n")
+        (insert example)
+        (insert "\n\n")))))
+
+(provide 'syntree-extract-examples)
+#+END_SRC
+
+* Export All Examples
+  
+This block will tangle all the examples to their respective files.
+
+#+BEGIN_SRC emacs-lisp :results silent :tangle no
+(org-babel-tangle)
+#+END_SRC
+
+#+RESULTS:
+
+* Conclusion
+  
+With these examples, you can test the syntree-generator visualization tools and explore syntax trees of different complexity levels. The examples range from simple subject-verb constructions to complex literary sentences with multiple nested clauses, providing a comprehensive test suite for your syntax tree analysis tools.
