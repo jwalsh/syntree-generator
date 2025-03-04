@@ -21,7 +21,7 @@ Each example is provided as a Babel block that can be tangled to the =examples/=
    
 Simple sentence with just a subject (NP) and verb (VP).
 
-#+BEGIN_SRC lisp :tangle examples/simple_1.sexp :mkdirp t
+#+BEGIN_SRC lisp :tangle examples/simple_1.lisp :mkdirp t
 (ROOT
   (S
     (NP
@@ -35,7 +35,7 @@ Simple sentence with just a subject (NP) and verb (VP).
    
 Simple question with an inverted structure.
 
-#+BEGIN_SRC lisp :tangle examples/simple_2.sexp
+#+BEGIN_SRC lisp :tangle examples/simple_2.lisp
 (ROOT
   (S
     (VP
@@ -50,7 +50,7 @@ Simple question with an inverted structure.
    
 Simple imperative sentence with just a verb phrase.
 
-#+BEGIN_SRC lisp :tangle examples/simple_3.sexp
+#+BEGIN_SRC lisp :tangle examples/simple_3.lisp
 (ROOT
   (S
     (VP
@@ -62,7 +62,7 @@ Simple imperative sentence with just a verb phrase.
    
 Simple sentence with subject, verb, and direct object.
 
-#+BEGIN_SRC lisp :tangle examples/simple_4.sexp
+#+BEGIN_SRC lisp :tangle examples/simple_4.lisp
 (ROOT
   (S
     (NP
@@ -79,7 +79,7 @@ Simple sentence with subject, verb, and direct object.
    
 Simple sentence with adjectives modifying nouns.
 
-#+BEGIN_SRC lisp :tangle examples/simple_5.sexp
+#+BEGIN_SRC lisp :tangle examples/simple_5.lisp
 (ROOT
   (S
     (NP
@@ -97,7 +97,7 @@ Simple sentence with adjectives modifying nouns.
    
 Medium complexity with a prepositional phrase modifying the verb phrase.
 
-#+BEGIN_SRC lisp :tangle examples/medium_1.sexp
+#+BEGIN_SRC lisp :tangle examples/medium_1.lisp
 (ROOT
   (S
     (NP
@@ -118,7 +118,7 @@ Medium complexity with a prepositional phrase modifying the verb phrase.
    
 Medium complexity with a conjunction joining two noun phrases.
 
-#+BEGIN_SRC lisp :tangle examples/medium_2.sexp
+#+BEGIN_SRC lisp :tangle examples/medium_2.lisp
 (ROOT
   (S
     (NP
@@ -142,7 +142,7 @@ Medium complexity with a conjunction joining two noun phrases.
    
 Medium complexity with adverbial modification of the verb.
 
-#+BEGIN_SRC lisp :tangle examples/medium_3.sexp
+#+BEGIN_SRC lisp :tangle examples/medium_3.lisp
 (ROOT
   (S
     (NP
@@ -160,7 +160,7 @@ Medium complexity with adverbial modification of the verb.
    
 Medium complexity with multiple adjectives modifying a noun.
 
-#+BEGIN_SRC lisp :tangle examples/medium_4.sexp
+#+BEGIN_SRC lisp :tangle examples/medium_4.lisp
 (ROOT
   (S
     (NP
@@ -182,7 +182,7 @@ Medium complexity with multiple adjectives modifying a noun.
    
 Medium complexity with a past tense construction and direct object.
 
-#+BEGIN_SRC lisp :tangle examples/medium_5.sexp
+#+BEGIN_SRC lisp :tangle examples/medium_5.lisp
 (ROOT
   (S
     (NP
@@ -206,7 +206,7 @@ Medium complexity with a past tense construction and direct object.
    
 Complex sentence with a relative clause modifying a noun phrase.
 
-#+BEGIN_SRC lisp :tangle examples/complex_1.sexp
+#+BEGIN_SRC lisp :tangle examples/complex_1.lisp
 (ROOT
   (S
     (NP
@@ -232,7 +232,7 @@ Complex sentence with a relative clause modifying a noun phrase.
    
 Complex sentence with a subordinate clause as the object of the main verb.
 
-#+BEGIN_SRC lisp :tangle examples/complex_2.sexp
+#+BEGIN_SRC lisp :tangle examples/complex_2.lisp
 (ROOT
   (S
     (NP
@@ -257,7 +257,7 @@ Complex sentence with a subordinate clause as the object of the main verb.
    
 Complex sentence with a negative infinitive purpose clause.
 
-#+BEGIN_SRC lisp :tangle examples/complex_3.sexp
+#+BEGIN_SRC lisp :tangle examples/complex_3.lisp
 (ROOT
   (S
     (NP
@@ -282,7 +282,7 @@ Complex sentence with a negative infinitive purpose clause.
    
 Complex sentence with a conditional clause.
 
-#+BEGIN_SRC lisp :tangle examples/complex_4.sexp
+#+BEGIN_SRC lisp :tangle examples/complex_4.lisp
 (ROOT
   (S
     (COND
@@ -308,7 +308,7 @@ Complex sentence with a conditional clause.
    
 Complex sentence with multiple nested prepositional phrases.
 
-#+BEGIN_SRC lisp :tangle examples/complex_5.sexp
+#+BEGIN_SRC lisp :tangle examples/complex_5.lisp
 (ROOT
   (S
     (NP
@@ -344,7 +344,7 @@ Complex sentence with multiple nested prepositional phrases.
    
 Very complex sentence with multiple clauses and nested phrases typical of Proust's style.
 
-#+BEGIN_SRC lisp :tangle examples/very_complex_1.sexp
+#+BEGIN_SRC lisp :tangle examples/very_complex_1.lisp
 (ROOT
   (S
     (CP
@@ -388,7 +388,7 @@ Very complex sentence with multiple clauses and nested phrases typical of Proust
    
 Very complex sentence with multiple levels of subordination.
 
-#+BEGIN_SRC lisp :tangle examples/very_complex_2.sexp
+#+BEGIN_SRC lisp :tangle examples/very_complex_2.lisp
 (ROOT
   (S
     (NP
@@ -427,7 +427,7 @@ Very complex sentence with multiple levels of subordination.
    
 Very complex sentence with conjoined complex clauses.
 
-#+BEGIN_SRC lisp :tangle examples/very_complex_3.sexp
+#+BEGIN_SRC lisp :tangle examples/very_complex_3.lisp
 (ROOT
   (S
     (CP
@@ -480,7 +480,7 @@ Very complex sentence with conjoined complex clauses.
    
 Very complex sentence with nested relative clauses.
 
-#+BEGIN_SRC lisp :tangle examples/very_complex_4.sexp
+#+BEGIN_SRC lisp :tangle examples/very_complex_4.lisp
 (ROOT
   (S
     (NP
@@ -531,7 +531,7 @@ Very complex sentence with nested relative clauses.
    
 Very complex sentence with a rich array of modifiers and nested clauses.
 
-#+BEGIN_SRC lisp :tangle examples/very_complex_5.sexp
+#+BEGIN_SRC lisp :tangle examples/very_complex_5.lisp
 (ROOT
   (S
     (ADV "Finalement")
@@ -605,7 +605,7 @@ Very complex sentence with a rich array of modifiers and nested clauses.
    
 A selection of diverse examples at different complexity levels for quick testing.
 
-#+BEGIN_SRC lisp :tangle examples/diverse_examples.sexp
+#+BEGIN_SRC lisp :tangle examples/diverse_examples.lisp
 # Diverse S-expression examples for syntactic analysis
 
 # Simple Example - Basic subject-verb structure
@@ -761,28 +761,28 @@ This function extracts examples from the parsed output. You can define a functio
          (t (push example very-complex-examples)))))
     
     ;; Save examples to files
-    (with-temp-file (expand-file-name "simple_examples.sexp" output-dir)
+    (with-temp-file (expand-file-name "simple_examples.lisp" output-dir)
       (insert "# Simple S-expression examples\n\n")
       (dolist (example (reverse (seq-take simple-examples 5)))
         (insert "# Example\n")
         (insert example)
         (insert "\n\n")))
     
-    (with-temp-file (expand-file-name "medium_examples.sexp" output-dir)
+    (with-temp-file (expand-file-name "medium_examples.lisp" output-dir)
       (insert "# Medium S-expression examples\n\n")
       (dolist (example (reverse (seq-take medium-examples 5)))
         (insert "# Example\n")
         (insert example)
         (insert "\n\n")))
     
-    (with-temp-file (expand-file-name "complex_examples.sexp" output-dir)
+    (with-temp-file (expand-file-name "complex_examples.lisp" output-dir)
       (insert "# Complex S-expression examples\n\n")
       (dolist (example (reverse (seq-take complex-examples 5)))
         (insert "# Example\n")
         (insert example)
         (insert "\n\n")))
     
-    (with-temp-file (expand-file-name "very_complex_examples.sexp" output-dir)
+    (with-temp-file (expand-file-name "very_complex_examples.lisp" output-dir)
       (insert "# Very complex S-expression examples\n\n")
       (dolist (example (reverse (seq-take very-complex-examples 5)))
         (insert "# Example\n")

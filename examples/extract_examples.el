@@ -58,28 +58,28 @@
          (t (push example very-complex-examples)))))
     
     ;; Save examples to files
-    (with-temp-file (expand-file-name "simple_examples.sexp" output-dir)
+    (with-temp-file (expand-file-name "simple_examples.lisp" output-dir)
       (insert "# Simple S-expression examples\n\n")
       (dolist (example (reverse (seq-take simple-examples 5)))
         (insert "# Example\n")
         (insert example)
         (insert "\n\n")))
     
-    (with-temp-file (expand-file-name "medium_examples.sexp" output-dir)
+    (with-temp-file (expand-file-name "medium_examples.lisp" output-dir)
       (insert "# Medium S-expression examples\n\n")
       (dolist (example (reverse (seq-take medium-examples 5)))
         (insert "# Example\n")
         (insert example)
         (insert "\n\n")))
     
-    (with-temp-file (expand-file-name "complex_examples.sexp" output-dir)
+    (with-temp-file (expand-file-name "complex_examples.lisp" output-dir)
       (insert "# Complex S-expression examples\n\n")
       (dolist (example (reverse (seq-take complex-examples 5)))
         (insert "# Example\n")
         (insert example)
         (insert "\n\n")))
     
-    (with-temp-file (expand-file-name "very_complex_examples.sexp" output-dir)
+    (with-temp-file (expand-file-name "very_complex_examples.lisp" output-dir)
       (insert "# Very complex S-expression examples\n\n")
       (dolist (example (reverse (seq-take very-complex-examples 5)))
         (insert "# Example\n")

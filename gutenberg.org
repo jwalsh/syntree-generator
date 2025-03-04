@@ -1,0 +1,113 @@
+#+TITLE: Gutenberg.org French Literary Texts
+#+AUTHOR: Jason Walsh
+#+EMAIL: j@wal.sh
+#+DATE: March 4, 2025
+
+* French Literary Texts for Syntactic Analysis
+
+This file organizes the download of various French literary texts from Project Gutenberg for syntactic analysis. These texts are particularly suitable for demonstrating complex French syntax structures.
+
+* Setup
+
+Ensure we have a data directory:
+
+#+BEGIN_SRC sh :results silent :mkdirp yes
+mkdir -p data
+#+END_SRC
+
+* Marcel Proust Works
+
+Proust's complex, lengthy sentences make his works ideal for syntactic analysis.
+
+** Sodome et Gomorrhe - Première partie
+#+BEGIN_SRC sh :dir data :results output
+if [ ! -f "pg15288.txt" ]; then
+  wget https://www.gutenberg.org/cache/epub/15288/pg15288.txt
+  echo "Downloaded: Sodome et Gomorrhe - Première partie"
+else
+  echo "Already exists: Sodome et Gomorrhe - Première partie"
+fi
+#+END_SRC
+
+** Sodome et Gomorrhe - Deuxième partie
+#+BEGIN_SRC sh :dir data :results output
+if [ ! -f "pg15075.txt" ]; then
+  wget https://www.gutenberg.org/cache/epub/15075/pg15075.txt
+  echo "Downloaded: Sodome et Gomorrhe - Deuxième partie"
+else
+  echo "Already exists: Sodome et Gomorrhe - Deuxième partie"
+fi
+#+END_SRC
+
+** La Prisonnière (Sodome et Gomorrhe III)
+#+BEGIN_SRC sh :dir data :results output
+if [ ! -f "pg60720.txt" ]; then
+  wget https://www.gutenberg.org/cache/epub/60720/pg60720.txt
+  echo "Downloaded: La Prisonnière (Sodome et Gomorrhe III)"
+else
+  echo "Already exists: La Prisonnière (Sodome et Gomorrhe III)"
+fi
+#+END_SRC
+
+** Du côté de chez Swann
+#+BEGIN_SRC sh :dir data :results output
+if [ ! -f "pg2650.txt" ]; then
+  wget https://www.gutenberg.org/cache/epub/2650/pg2650.txt
+  echo "Downloaded: Du côté de chez Swann"
+else
+  echo "Already exists: Du côté de chez Swann"
+fi
+#+END_SRC
+
+* Other French Literary Works
+
+** Les Fleurs du Mal by Charles Baudelaire
+#+BEGIN_SRC sh :dir data :results output
+if [ ! -f "pg6099.txt" ]; then
+  wget https://www.gutenberg.org/cache/epub/6099/pg6099.txt
+  echo "Downloaded: Les Fleurs du Mal"
+else
+  echo "Already exists: Les Fleurs du Mal"
+fi
+#+END_SRC
+
+** Le livre de la Jungle by Rudyard Kipling (French translation)
+#+BEGIN_SRC sh :dir data :results output
+if [ ! -f "pg54183.txt" ]; then
+  wget https://www.gutenberg.org/cache/epub/54183/pg54183.txt
+  echo "Downloaded: Le livre de la Jungle"
+else
+  echo "Already exists: Le livre de la Jungle"
+fi
+#+END_SRC
+
+* Create Text Catalog
+
+Generate a catalog file with metadata about each text:
+
+#+BEGIN_SRC sh :dir data :results output :exports both
+cat > texts_catalog.csv << EOF
+id,title,author,filename,language,year,complexity
+15288,"Sodome et Gomorrhe - Première partie","Marcel Proust","pg15288.txt","fr",1921,"very high"
+15075,"Sodome et Gomorrhe - Deuxième partie","Marcel Proust","pg15075.txt","fr",1921,"very high"
+60720,"La Prisonnière (Sodome et Gomorrhe III)","Marcel Proust","pg60720.txt","fr",1923,"very high"
+2650,"Du côté de chez Swann","Marcel Proust","pg2650.txt","fr",1913,"very high"
+6099,"Les Fleurs du Mal","Charles Baudelaire","pg6099.txt","fr",1857,"high"
+54183,"Le livre de la Jungle","Rudyard Kipling (tr.)","pg54183.txt","fr",1899,"medium"
+EOF
+
+echo "Created texts catalog with the following entries:"
+cat texts_catalog.csv
+#+END_SRC
+
+* Usage Examples
+
+These texts can be processed with the syntree-generator tool:
+
+#+BEGIN_SRC sh :results output :exports both
+echo "# Example command to parse Du côté de chez Swann:"
+echo "make run INPUT_FILE=data/pg2650.txt OUTPUT_FILE=output/swann.sexp"
+echo
+echo "# Example command to parse Les Fleurs du Mal:"
+echo "make run INPUT_FILE=data/pg6099.txt OUTPUT_FILE=output/baudelaire.sexp"
+#+END_SRC

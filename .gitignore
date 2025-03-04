@@ -45,3 +45,6 @@ data/*.txt
 .directory
 .Trash-*
 
+# Gutenberg text files
+data/pg*.txt
+data/texts_catalog.csv
