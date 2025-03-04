@@ -40,7 +40,7 @@
   (setq org-babel-lisp-eval-fn 'sly-eval))
 
 ;; S-expression Grammar mode
-(define-derived-mode sexp-grammar-mode lisp-mode "S-expr Grammar"
+(define-derived-mode lisp-syntax-mode lisp-mode "S-expr Grammar"
   "Major mode for editing S-expression grammar files."
   (setq-local lisp-indent-function 'lisp-indent-function)
   (setq-local font-lock-defaults
@@ -49,9 +49,9 @@
                  ;; String literals
                  ("\"\\([^\"]*\\)\"" 1 font-lock-string-face)))))
 
-;; Associate with .lisp and .sexp files in the examples directory
-(add-to-list 'auto-mode-alist '("\\.sexp\\'" . sexp-grammar-mode))
-(add-to-list 'auto-mode-alist '("examples/.*\\.lisp\\'" . sexp-grammar-mode))
+;; Associate with .lisp and .lisp files in the examples directory
+(add-to-list 'auto-mode-alist '("\\.lisp\\'" . lisp-syntax-mode))
+(add-to-list 'auto-mode-alist '("examples/.*\\.lisp\\'" . lisp-syntax-mode))
 
 ;; Enable syntax highlighting for S-expressions in org-mode babel blocks
 (defun my/org-mode-setup ()
@@ -76,7 +76,7 @@
                    (buffer-string))))
     (with-current-buffer buf
       (erase-buffer)
-      (sexp-grammar-mode)
+      (lisp-syntax-mode)
       (insert content)
       (goto-char (point-min)))
     (switch-to-buffer buf)

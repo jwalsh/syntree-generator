@@ -48,3 +48,5 @@ data/*.txt
 # Gutenberg text files
 data/pg*.txt
 data/texts_catalog.csv
+.server.pid
+screenshots/*.png

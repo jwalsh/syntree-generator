@@ -1,0 +1,108 @@
+# shot-scraper configuration for syntree-generator
+# See: https://github.com/simonw/shot-scraper
+
+shots:
+  - output: screenshots/syntax-tree-ui.png
+    url: http://localhost:8765/
+    width: 1200
+    height: 800
+    wait: 1000
+    javascript: |
+      // Wait for React to render
+      await new Promise(r => setTimeout(r, 500));
+      
+      // Fill the textarea with a complex example
+      const textArea = document.querySelector('textarea');
+      if (textArea) {
+        textArea.value = `(ROOT
+  (S
+    (NP
+      (DET "L'")
+      (N "homme")
+      (REL
+        (REL-PRO "qui")
+        (VP
+          (V "regardait")
+          (PP
+            (P "par")
+            (NP
+              (DET "la")
+              (N "fenêtre"))))))
+    (VP
+      (V "attendait")
+      (NP
+        (DET "son")
+        (N "ami")))))`;
+        
+        // Trigger the parser
+        const parseButton = document.querySelector('button');
+        if (parseButton) {
+          parseButton.click();
+        }
+      }
+      
+      // Allow time for the tree to render
+      await new Promise(r => setTimeout(r, 1000));
+      
+      // Return true to take the screenshot
+      return true;
+      
+  - output: screenshots/syntax-tree-comparison.png
+    url: http://localhost:8765/
+    width: 1200
+    height: 800
+    wait: 1000
+    javascript: |
+      // Wait for React to render
+      await new Promise(r => setTimeout(r, 500));
+      
+      // Compare a simple and complex structure side by side
+      const textArea = document.querySelector('textarea');
+      if (textArea) {
+        textArea.value = `# Simple example
+(ROOT
+  (S
+    (NP
+      (DET "Le")
+      (N "chat"))
+    (VP
+      (V "dort"))))
+
+# Complex example from Proust
+(ROOT
+  (S
+    (CP
+      (SUB
+        (REL
+          (REL-PRO "Comme")
+          (NP
+            (PRO "je"))
+          (VP
+            (V "descendais")
+            (PP
+              (P "par")
+              (NP
+                (DET "l'")
+                (N "escalier"))))))
+      (NP
+        (PRO "j'"))
+      (VP
+        (V "entendis")
+        (NP
+          (N "M.")
+          (PP
+            (P "de")
+            (N "Charlus")))))))`;
+        
+        // Trigger the parser
+        const parseButton = document.querySelector('button');
+        if (parseButton) {
+          parseButton.click();
+        }
+      }
+      
+      // Allow time for the tree to render
+      await new Promise(r => setTimeout(r, 1000));
+      
+      // Return true to take the screenshot
+      return true;

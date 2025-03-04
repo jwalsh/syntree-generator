@@ -254,7 +254,7 @@ class SyntaxTreeGenerator:
         
         # Determine output file path if not provided
         if not output_file:
-            output_file = Path(file_path).with_suffix('.sample.sexp')
+            output_file = Path(file_path).with_suffix('.sample.lisp')
         
         # Write samples to the new file
         with open(output_file, 'w', encoding='utf-8') as out_file:

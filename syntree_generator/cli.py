@@ -18,8 +18,8 @@ def parse_args():
     parser.add_argument(
         "-o", "--output", 
         dest="output_file",
-        default="parsed_output.sexp",
-        help="Output file for S-expressions (default: parsed_output.sexp)"
+        default="parsed_output.lisp",
+        help="Output file for S-expressions (default: parsed_output.lisp)"
     )
     parser.add_argument(
         "-c", "--chunk-size", 

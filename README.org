@@ -1,23 +1,29 @@
-#+TITLE: Syntree Generator
+#+TITLE: syntree-generator
 #+AUTHOR: Jason Walsh
 #+EMAIL: j@wal.sh
-#+DATE: March 4, 2025
 
 * Syntree Generator
 
-A tool for converting text (particularly French literary text) into S-expression syntax trees for linguistic analysis.
+A tool for converting French literary text into S-expression syntax trees for linguistic analysis, with visualization capabilities.
+
+[[./screenshots/syntax-tree-ui.png]]
 
 ** Overview
 
-This project converts natural language text into structured Abstract Syntax Trees (ASTs) represented in S-expression format. It is particularly designed for analyzing French literary texts, such as Proust's works.
+Syntree Generator converts natural language text into structured Abstract Syntax Trees (ASTs) represented in S-expression format. It's particularly optimized for analyzing French literary texts, such as Proust's works, by mapping syntactic dependencies to constituent structure.
 
-The generated S-expressions follow a constituent-based structure with labels such as:
-- ROOT - Root node of the sentence
-- S - Sentence or clause
-- PP - Prepositional phrase
-- NP - Noun phrase
-- VP - Verb phrase
-- And many more linguistic constituents
+The tool breaks down sentences into their grammatical components (nouns, verbs, phrases, clauses) and generates formal representations that can be visualized and studied. It includes a web UI for interactive exploration of the syntax trees and supports extracting samples for use with external visualization tools.
+
+** Features
+
+- Converts text to constituency-based syntax trees in S-expression format
+- Optimized for French literary texts with special focus on complex syntactic structures
+- Web-based visualization of syntax trees
+- Integration with spaCy for linguistic analysis
+- Sample extraction for use with external tools
+- Command-line interface for batch processing
+- Configurable chunking for processing large texts
+- Emacs integration for syntax highlighting and advanced tree visualization
 
 ** Installation
 
@@ -40,10 +46,10 @@ To parse a text file and generate S-expressions:
 
 #+BEGIN_SRC bash
 # Using the shell script
-./_.sh path/to/input.txt path/to/output.sexp
+./_.sh path/to/input.txt path/to/output.lisp
 
 # Or using make
-make run INPUT_FILE=data/pg15288.txt OUTPUT_FILE=output/proust.sexp
+make run INPUT_FILE=data/pg15288.txt OUTPUT_FILE=output/proust.lisp
 #+END_SRC
 
 *** Getting samples
@@ -54,7 +60,7 @@ To generate a sample of S-expressions that can be easily loaded into the S-expre
 make samples SAMPLE_SIZE=5
 #+END_SRC
 
-This will create a file with the extension ~.sample.sexp~ containing 5 sample S-expressions.
+This will create a file with the extension ~.sample.lisp~ containing 5 sample S-expressions.
 
 *** Visualization
 
@@ -65,53 +71,50 @@ make serve
 # Then visit http://localhost:8000 in your browser
 #+END_SRC
 
-*** Options
+*** Advanced Emacs Integration
 
-The parser supports several options:
+For users with Emacs, the project provides enhanced syntax highlighting and visualization:
 
-- Input file: The text file to analyze
-- Output file: Where to write the S-expressions
-- Chunk size: The size of text chunks to process (default: 5000 characters)
-- Language: The language of the text (currently supports 'fr' for French and 'en' for English)
-- Sample size: Number of S-expressions to extract for samples
+#+BEGIN_SRC bash
+# Copy the provided .emacs.d/init.el or load publish.el
+emacs -l publish.el
 
-** Structure
-
-#+BEGIN_SRC
-syntree-generator/
-├── Makefile              # Build automation
-├── README.org            # This file
-├── data/                 # Input text files
-│   └── pg15288.txt       # Proust's text
-├── output/               # Generated S-expressions
-├── public/               # Web UI
-│   └── index.html        # S-expression visualizer
-├── pyproject.toml        # Poetry configuration
-├── syntree_generator/    # Source code
-│   ├── __init__.py
-│   ├── cli.py            # Command line interface
-│   └── parser.py         # Core parsing logic
-└── tests/                # Test suite
-    └── test_parser.py
+# Then open any .lisp file in the examples directory
+# Use C-c t to visualize the tree structure
 #+END_SRC
 
-** Example Output
+** Literary Texts
 
-Here's an example of the S-expression output for a simple French sentence:
+The repository includes org-mode scripts to download various French literary texts for testing and analysis:
 
-#+BEGIN_SRC lisp
-(ROOT
-  (S
-    (NP
-      (DET "Le")
-      (N "chat"))
-    (VP
-      (V "dort")
-      (PP
-        (P "sur")
-        (NP
-          (DET "le")
-          (N "canapé"))))))
+#+BEGIN_SRC bash
+# Download all texts
+make download-texts
+
+# Process specific texts
+make run INPUT_FILE=data/pg2650.txt OUTPUT_FILE=output/swann.lisp
+make run INPUT_FILE=data/pg6099.txt OUTPUT_FILE=output/baudelaire.lisp
+#+END_SRC
+
+** Examples
+
+The ~examples/~ directory contains S-expression examples at various complexity levels:
+
+- Simple examples with basic subject-verb structures
+- Medium examples with prepositional phrases and modifiers
+- Complex examples with relative/subordinate clauses
+- Very complex examples typical of Proust's style
+
+** Documentation
+
+The documentation is available in the org-mode files and can be published to HTML:
+
+#+BEGIN_SRC bash
+# Generate all documentation
+make docs
+
+# View the documentation
+open docs/index.html
 #+END_SRC
 
 ** Development
@@ -128,13 +131,15 @@ make test
 make format
 #+END_SRC
 
-*** Adding Features
+*** Capturing Screenshots
 
-To add new features:
+#+BEGIN_SRC bash
+# Setup shot-scraper
+./setup-shot-scraper.sh
 
-1. Implement the feature in the appropriate module
-2. Add tests in the ~tests/~ directory
-3. Update documentation in this README
+# Capture screenshots of the web UI
+make screenshots
+#+END_SRC
 
 ** License
 
