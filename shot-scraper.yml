@@ -46,6 +46,60 @@ shots:
       
       // Return true to take the screenshot
       return true;
+  
+  - output: screenshots/highlighting-demo.png
+    url: http://localhost:8765/
+    width: 1200
+    height: 800
+    wait: 1000
+    javascript: |
+      // Wait for React to render
+      await new Promise(r => setTimeout(r, 500));
+      
+      // Fill the textarea with our sample sentence
+      const textArea = document.querySelector('textarea');
+      if (textArea) {
+        textArea.value = `(ROOT
+  (S
+    (NP
+      (DET "Le")
+      (ADJ "petit")
+      (N "chat"))
+    (VP
+      (V "dort")
+      (PP
+        (P "sur")
+        (NP
+          (DET "le")
+          (ADJ "vieux")
+          (N "canapé"))))))`;
+        
+        // Trigger the parser
+        const parseButton = document.querySelector('button');
+        if (parseButton) {
+          parseButton.click();
+        }
+      }
+      
+      // Allow time for the tree to render
+      await new Promise(r => setTimeout(r, 1000));
+      
+      // Navigate to a specific node to demonstrate highlighting
+      // Simulate clicking the "Next" button 5 times to navigate to a specific node
+      for (let i = 0; i < 5; i++) {
+        const nextButton = document.querySelectorAll('.nav-button')[1];
+        if (nextButton) {
+          nextButton.click();
+          // Small delay between clicks
+          await new Promise(r => setTimeout(r, 200));
+        }
+      }
+      
+      // Allow time for highlighting to update
+      await new Promise(r => setTimeout(r, 500));
+      
+      // Return true to take the screenshot
+      return true;
       
   - output: screenshots/syntax-tree-comparison.png
     url: http://localhost:8765/
