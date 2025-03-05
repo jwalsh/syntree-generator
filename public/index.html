@@ -381,10 +381,17 @@
     const extractPlainText = (node) => {
       if (!node) return '';
       
+      // For TEXT nodes, return the content directly
       if (node.type === 'TEXT') {
         return node.content;
       }
       
+      // For leaf nodes with no children, check if we have direct content
+      if (node.children.length === 0 && node.content) {
+        return node.content;
+      }
+      
+      // For nodes with children, extract text from all children
       return node.children
         .map(child => extractPlainText(child))
         .join(' ')
@@ -485,38 +492,84 @@
         return <div className="text-paragraph">{displayText}</div>;
       }
       
+      // Debug logging
+      console.log("Highlighting node:", highlightedNode.type, "with text:", nodeText);
+      
       try {
         // Special handling for leaf nodes (words) and internal nodes (phrases)
         let parts = [];
         let matchFound = false;
         
-        // Exact word matching for leaf nodes (like specific words)
-        if (highlightedNode.type === 'N' || 
-            highlightedNode.type === 'V' || 
-            highlightedNode.type === 'DET' || 
-            highlightedNode.type === 'ADJ' || 
-            highlightedNode.type === 'P' || 
-            highlightedNode.type === 'ADV' ||
-            highlightedNode.children.length === 0) {
+        // Handle leaf nodes (terminal nodes like N, V, DET, etc.)
+        const isLeafNode = (
+          highlightedNode.type === 'N' || 
+          highlightedNode.type === 'V' || 
+          highlightedNode.type === 'DET' || 
+          highlightedNode.type === 'ADJ' || 
+          highlightedNode.type === 'P' || 
+          highlightedNode.type === 'ADV' ||
+          highlightedNode.type === 'TEXT' ||
+          highlightedNode.children.length === 0
+        );
+        
+        // For leaf nodes, we want to match exact words with word boundaries
+        if (isLeafNode) {
+          console.log("Processing leaf node:", nodeText);
+          const escapedText = nodeText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
           
-          // Use word boundary in regex to match whole words only
-          const wordRegex = new RegExp(`\\b(${nodeText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})\\b`, 'i');
-          parts = displayText.split(wordRegex);
-          matchFound = parts.length > 1;
+          try {
+            // Use word boundaries for exact word matching
+            const wordRegex = new RegExp(`\\b(${escapedText})\\b`, 'i');
+            parts = displayText.split(wordRegex);
+            matchFound = parts.length > 1;
+            console.log("Word boundary match:", matchFound, parts);
+          } catch (e) {
+            console.error("Word boundary regex error:", e);
+          }
         }
         
-        // If not a leaf node or no exact match found, try phrase matching
+        // For phrases or if word boundary matching didn't work for leaf nodes
         if (!matchFound) {
+          console.log("Using phrase matching for:", nodeText);
           const escapedNodeText = nodeText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-          const regex = new RegExp(`(${escapedNodeText})`, 'i');
-          parts = displayText.split(regex);
+          
+          // First try exact phrase match
+          try {
+            const phraseRegex = new RegExp(`(${escapedNodeText})`, 'i');
+            parts = displayText.split(phraseRegex);
+            matchFound = parts.length > 1;
+            console.log("Phrase match:", matchFound, parts);
+          } catch (e) {
+            console.error("Phrase regex error:", e);
+            parts = [displayText]; // Default to showing whole text
+          }
+          
+          // If both word and phrase matching failed, try a simple contains
+          if (!matchFound && nodeText.length > 1) {
+            parts = [];
+            let remaining = displayText;
+            const lowerNodeText = nodeText.toLowerCase();
+            const lowerDisplayText = displayText.toLowerCase();
+            
+            const index = lowerDisplayText.indexOf(lowerNodeText);
+            if (index !== -1) {
+              parts.push(displayText.substring(0, index));
+              parts.push(displayText.substring(index, index + nodeText.length));
+              parts.push(displayText.substring(index + nodeText.length));
+              matchFound = true;
+              console.log("Simple contains match:", parts);
+            } else {
+              parts = [displayText];
+            }
+          }
         }
         
         return (
           <div className="text-paragraph">
             {parts.map((part, i) => {
-              // Check if this part matches the node text (case insensitive)
+              // Compare lowercased versions for matching
               if (part.toLowerCase() === nodeText.toLowerCase()) {
+                console.log("Highlighting part:", part, "with node type:", highlightedNode.type);
                 return (
                   <span 
                     key={i} 
@@ -531,7 +584,7 @@
           </div>
         );
       } catch (e) {
-        console.error("Error highlighting text:", e);
+        console.error("Error in text highlighting:", e);
         return <div className="text-paragraph">{displayText}</div>;
       }
     };
