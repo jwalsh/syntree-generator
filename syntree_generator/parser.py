@@ -254,7 +254,15 @@ class SyntaxTreeGenerator:
         
         # Determine output file path if not provided
         if not output_file:
-            output_file = Path(file_path).with_suffix('.sample.lisp')
+            # Use the input file's directory for the output path
+            input_path = Path(file_path)
+            output_file = input_path.parent / f"{input_path.stem}.sample.lisp"
+        else:
+            # Ensure the output_file is a Path object
+            output_file = Path(output_file)
+        
+        # Create parent directories if they don't exist
+        output_file.parent.mkdir(parents=True, exist_ok=True)
         
         # Write samples to the new file
         with open(output_file, 'w', encoding='utf-8') as out_file:

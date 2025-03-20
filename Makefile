@@ -44,6 +44,10 @@ test: setup ## Run tests
 	@echo "Running tests..."
 	$(PYTHON) -m pytest tests/
 
+test-one: setup ## Run a single test (e.g., make test-one TEST=test_simple_sentence)
+	@echo "Running single test: $(TEST)..."
+	$(PYTHON) -m pytest tests/test_parser.py::$(TEST) -v
+
 format: setup ## Format code with black and isort
 	@echo "Formatting code..."
 	poetry run black syntree_generator/ tests/

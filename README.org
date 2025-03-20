@@ -45,8 +45,8 @@ make setup
 To parse a text file and generate S-expressions:
 
 #+BEGIN_SRC bash
-# Using the shell script
-./_.sh path/to/input.txt path/to/output.lisp
+# Using the Python CLI directly
+python -m syntree_generator.cli path/to/input.txt -o path/to/output.lisp
 
 # Or using make
 make run INPUT_FILE=data/pg15288.txt OUTPUT_FILE=output/proust.lisp
@@ -113,8 +113,9 @@ The documentation is available in the org-mode files and can be published to HTM
 # Generate all documentation
 make docs
 
-# View the documentation
-open docs/index.html
+# Serve and view the documentation
+make serve
+# Then visit http://localhost:8765 in your browser
 #+END_SRC
 
 ** Development
